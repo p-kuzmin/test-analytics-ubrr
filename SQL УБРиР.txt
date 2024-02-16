@@ -1,0 +1,38 @@
+Задание 1
+
+select invoice_date::date,
+       sum(total) as sum_total
+from invoice 
+where invoice_date::date >= '2011-09-01' and invoice_date::date < '2011-10-01'
+      and sum(total) > 1 and sum(total) < 10
+group by invoice_date::date
+order by invoice_date;
+
+--------------
+
+Задание 2
+
+select billing_country,
+       count(case when coalesce(billing_postal_code,'') = '' then 1 else 0 end) as null_postal_code
+from invoice
+where billing_address not like any(array['%Street%', '%Way%', '%Road%', '%Drive%'])
+      and  count(case when coalesce(billing_postal_code,'') = '' then 1 else 0 end) > 10
+group by billing_country;
+
+--------------
+
+Задание 3
+
+select tr.name as trac_name,
+       count(distinct invoice_id) as count_purchase
+from invoice_line as il
+left join track as tr
+         on il.tract_id = tr.tract_id
+group by tr.name
+limit 20;
+     
+
+
+
+
+
